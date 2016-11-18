@@ -6,6 +6,9 @@
 elementclass Client {
 	$address, $gateway |
 
+        //Element that will instantiate a join in the multicast network
+	user :: multicastuser()
+
 	ip :: Strip(14)
 		-> CheckIPHeader()
 		-> rt :: StaticIPLookup(
