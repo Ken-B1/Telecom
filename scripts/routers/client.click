@@ -6,8 +6,11 @@
 elementclass Client {
 	$address, $gateway |
 
-        //Element that will instantiate a join in the multicast network
+        //Element that will instantiate a join or leave in the multicast network
 	user :: multicastuser()
+		-> IPEncap(2, $address, $gateway, TTL 1)
+		-> EtherEncap(0x0800, $address, $gateway)
+		-> output;
 
 	ip :: Strip(14)
 		-> CheckIPHeader()

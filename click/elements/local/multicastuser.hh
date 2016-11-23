@@ -9,7 +9,7 @@ class multicastuser : public Element {
 		~multicastuser();
 		
 		const char *class_name() const	{ return "multicastuser"; }
-		const char *port_count() const	{ return "0/0"; }
+		const char *port_count() const	{ return "0/1"; }
 		const char *processing() const	{ return PUSH; }
 		int configure(Vector<String>&, ErrorHandler*);
 		
