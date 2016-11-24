@@ -75,12 +75,16 @@ int multicastuser::join(const String& conf, Element* e, void * thunk, ErrorHandl
 
 	format->Type = 0x22;
 	format->Reserved1 = 0;
-	format->Checksum = htons(0x3853);
+	format->Checksum = 0;
 	format->Reserved2 = 0;
-	uint16_t numrecords = 0x1;
+	int16_t numrecords = 0x1;
 	format->NumRecords = htons(numrecords);
 	format->record = *record;
 	
+	uint16_t checksum = format->Type + format->NumRecords + format->NumRecords + record->RecordType + ~record->NumSources + record->MulticastAddress + record->source;
+	format->Checksum = ~checksum;
+
+
         e->push(1, p);	
 	return 0; 
 }
