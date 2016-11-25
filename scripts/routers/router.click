@@ -34,7 +34,11 @@ elementclass Router {
 	//Multicast report messages 
 	rt[4]
 		-> IGMPStateupdate(INFOBASE infoBase)
-		-> Discard;
+		-> QueryGenerator
+		//Temporary useless encap for debugging
+		-> IPEncap(2, $client1_address, multicast_report_address, TTL 1)
+		-> EtherEncap(0x0800, $client1_address, $client1_address)
+		-> ToDump("Querymessage.pcap")
 	// ARP responses are copied to each ARPQuerier and the host.
 	arpt :: Tee (3);
 	

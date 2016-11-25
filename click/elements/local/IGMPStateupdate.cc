@@ -44,16 +44,19 @@ void IGMPStateupdate::push(int s, Packet* p){
 		IPAddress group = record.MulticastAddress;
 
 		switch(recordtype){
-			case 3: click_chatter("Change to include record has been received");
-				this->infoBase->includeRecord(source, group);
-				break;
-			case 4: click_chatter("Change to exclude record has been received");
+			case 3: //Received a include record == leave
+				click_chatter("Change to include record has been received");
+				//Change names to correctly represent shit
 				this->infoBase ->excludeRecord(source, group);
+				output(0).push(p);
+				break;
+			case 4: //Received a exclude record == join
+				click_chatter("Change to exclude record has been received");
+				this->infoBase->includeRecord(source, group);
 				break;
 
 		}
 	}else{
-		click_chatter("Incorrect packet received");
 		q->kill();
 	}
 }

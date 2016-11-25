@@ -277,15 +277,16 @@ elements.o: elements.cc /usr/include/stdc-predef.h \
  ../elements/test/nulltask.hh ../elements/tcpudp/tcpfragmenter.hh \
  ../elements/standard/randomerror.hh ../elements/standard/quitwatcher.hh \
  ../elements/standard/flowinfo.hh ../elements/standard/delayshaper.hh \
- ../elements/icmp/icmppingencap.hh ../elements/icmp/checkicmpheader.hh \
- ../elements/ethernet/vlanencap.hh ../elements/ethernet/vlandecap.hh \
- ../elements/ethernet/ethermirror.hh ../elements/ethernet/ensureether.hh \
+ ../elements/local/QueryGenerator.hh ../elements/icmp/icmppingencap.hh \
+ ../elements/icmp/checkicmpheader.hh ../elements/ethernet/vlanencap.hh \
+ ../elements/ethernet/vlandecap.hh ../elements/ethernet/ethermirror.hh \
+ ../elements/ethernet/ensureether.hh \
  ../elements/analysis/aggregatelast.hh \
  ../elements/userlevel/torawsocket.hh \
  ../elements/test/neighborhoodtest.hh ../elements/tcpudp/udpipencap.hh \
  ../elements/standard/suppressor.hh ../elements/standard/classifier.hh \
  ../elements/standard/classification.hh \
- ../elements/standard/checkcrc32.hh ../elements/local/multicastuser.hh \
+ ../elements/standard/checkcrc32.hh ../elements/local/MulticastUser.hh \
  ../elements/ip/sortediplookup.hh ../elements/ip/lineariplookup.hh \
  ../elements/ip/ipoutputcombo.hh ../elements/ip/directiplookup.hh \
  ../elements/ethernet/arpquerier.hh ../elements/ethernet/arptable.hh \
@@ -1171,6 +1172,8 @@ elements.o: elements.cc /usr/include/stdc-predef.h \
 
 ../elements/standard/delayshaper.hh:
 
+../elements/local/QueryGenerator.hh:
+
 ../elements/icmp/icmppingencap.hh:
 
 ../elements/icmp/checkicmpheader.hh:
@@ -1199,7 +1202,7 @@ elements.o: elements.cc /usr/include/stdc-predef.h \
 
 ../elements/standard/checkcrc32.hh:
 
-../elements/local/multicastuser.hh:
+../elements/local/MulticastUser.hh:
 
 ../elements/ip/sortediplookup.hh:
 
