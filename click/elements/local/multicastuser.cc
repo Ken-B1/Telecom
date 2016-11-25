@@ -11,25 +11,6 @@
 
 CLICK_DECLS
 
-struct Record{
-  uint8_t RecordType;
-  uint8_t AuxDataLen;
-  uint16_t NumSources;
-  IPAddress MulticastAddress;
-  IPAddress source;
-};
-
-
-struct MulticastMessage{
-  uint8_t Type;
-  uint8_t Reserved1;
-  uint16_t Checksum;
-  uint16_t Reserved2;
-  uint16_t NumRecords;
-  Record record;
-};
-
-
 multicastuser::multicastuser()
 {}
 
@@ -48,7 +29,7 @@ void multicastuser::push(int, Packet* p){
 
 int multicastuser::join(const String& conf, Element* e, void * thunk, ErrorHandler * errh){
 	multicastuser * me = (multicastuser *) e;
-	int x = 0;
+	IPAddress x = 0;
 	if(cp_va_kparse(conf, me, errh, "ip", cpkM, cpIPAddress, &x, cpEnd) < 0) return -1;
 
 	//make packet with headroom for ip and ether headers
@@ -70,7 +51,7 @@ int multicastuser::join(const String& conf, Element* e, void * thunk, ErrorHandl
 	record->RecordType = 3;
 	record->AuxDataLen = 0;
 	record->NumSources = htons(1);
-	record->MulticastAddress = IPAddress("225.0.0.0");
+	record->MulticastAddress = IPAddress(x);
 	record->source = IPAddress("192.168.1.1");
 
 	format->Type = 0x22;

@@ -12,8 +12,12 @@
 //	[2]: packets sent to the 192.168.3.0/24 network
 //      [3]: packets destined for the router itself
 
+
 elementclass Router {
 	$server_address, $client1_address, $client2_address |
+
+	//Infobase element for the multicast states
+	infoBase :: IGMPRouterState(FIRSTNETWORK $client1_address, SECONDNETWORK $client2_address);
 
 	// Shared IP input path and routing table
 	ip :: Strip(14)
@@ -24,8 +28,13 @@ elementclass Router {
 					$client2_address:ip/32 0,
 					$server_address:ipnet 1,
 					$client1_address:ipnet 2,
-					$client2_address:ipnet 3);
-	
+					$client2_address:ipnet 3,
+					multicast_report_address:ip/32 4);
+
+	//Multicast report messages 
+	rt[4]
+		-> IGMPStateupdate(INFOBASE infoBase)
+		-> Discard;
 	// ARP responses are copied to each ARPQuerier and the host.
 	arpt :: Tee (3);
 	

@@ -1,6 +1,7 @@
 #ifndef CLICK_MULTICASTUSER_HH
 #define CLICK_MULTICASTUSER_HH
 #include <click/element.hh>
+#include "PacketDefinitions.hh"
 
 CLICK_DECLS
 class multicastuser : public Element { 

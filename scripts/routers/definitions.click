@@ -6,3 +6,4 @@
 // packet and print this out.
 
 AddressInfo(multicast_client_address 192.168.2.2) 
+AddressInfo(multicast_report_address 224.0.0.22)

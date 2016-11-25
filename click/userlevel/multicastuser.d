@@ -84,11 +84,12 @@ multicastuser.o: ../elements/local/multicastuser.cc \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
  /usr/include/x86_64-linux-gnu/bits/mathinline.h \
- ../include/click/handler.hh /usr/include/c++/5/iostream \
- /usr/include/c++/5/ostream /usr/include/c++/5/ios \
- /usr/include/c++/5/iosfwd /usr/include/c++/5/bits/stringfwd.h \
- /usr/include/c++/5/bits/memoryfwd.h /usr/include/c++/5/bits/postypes.h \
- /usr/include/c++/5/cwchar /usr/include/x86_64-linux-gnu/bits/wchar2.h \
+ ../include/click/handler.hh ../elements/local/PacketDefinitions.hh \
+ /usr/include/c++/5/iostream /usr/include/c++/5/ostream \
+ /usr/include/c++/5/ios /usr/include/c++/5/iosfwd \
+ /usr/include/c++/5/bits/stringfwd.h /usr/include/c++/5/bits/memoryfwd.h \
+ /usr/include/c++/5/bits/postypes.h /usr/include/c++/5/cwchar \
+ /usr/include/x86_64-linux-gnu/bits/wchar2.h \
  /usr/include/c++/5/bits/char_traits.h \
  /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/c++/5/bits/functexcept.h \
@@ -370,6 +371,8 @@ multicastuser.o: ../elements/local/multicastuser.cc \
 /usr/include/x86_64-linux-gnu/bits/mathinline.h:
 
 ../include/click/handler.hh:
+
+../elements/local/PacketDefinitions.hh:
 
 /usr/include/c++/5/iostream:
 
