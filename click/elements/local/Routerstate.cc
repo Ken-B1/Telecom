@@ -30,7 +30,6 @@ int IGMPRouterState::configure(Vector<String> &conf, ErrorHandler *errh) {
 
 void IGMPRouterState::includeRecord(IPAddress network, IPAddress group){
 	click_chatter("Set record to include");
-	click_chatter(network.unparse().c_str());
 	this->states[network][group] = true;
 	bool checkifnotexists = true;
 	for(Vector<IPAddress>::iterator it = this->groups.begin(); it != this->groups.end(); ++it){

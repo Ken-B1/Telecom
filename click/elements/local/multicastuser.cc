@@ -30,7 +30,7 @@ void multicastuser::push(int, Packet* p){
 int multicastuser::join(const String& conf, Element* e, void * thunk, ErrorHandler * errh){
 	multicastuser * me = (multicastuser *) e;
 	IPAddress x = 0;
-	if(cp_va_kparse(conf, me, errh, "ip", cpkM, cpIPAddress, &x, cpEnd) < 0) return -1;
+	if(cp_va_kparse(conf, me, errh, "group", cpkM, cpIPAddress, &x, cpEnd) < 0) return -1;
 
 	//make packet with headroom for ip and ether headers
 	//Data contains the data for the igmp packet
@@ -47,12 +47,57 @@ int multicastuser::join(const String& conf, Element* e, void * thunk, ErrorHandl
 
 	MulticastMessage* format = (MulticastMessage*)p->data();
 
+	//Set recordtype to 4 (change_to_exclude_mode) and exclude nothing
+	//= Join
+	Record* record = new Record();
+	record->RecordType = 4;
+	record->AuxDataLen = 0;
+	record->NumSources = 0;
+	record->MulticastAddress = IPAddress(x);
+
+	format->Type = 0x22;
+	format->Reserved1 = 0;
+	format->Checksum = 0;
+	format->Reserved2 = 0;
+	int16_t numrecords = 0x1;
+	format->NumRecords = htons(numrecords);
+	format->record = *record;
+	
+	uint16_t checksum = format->Type + format->NumRecords + format->NumRecords + record->RecordType + ~record->NumSources + record->MulticastAddress + record->source;
+	format->Checksum = ~checksum;
+
+
+        e->push(1, p);	
+	return 0; 
+}
+
+int multicastuser::leave(const String& conf, Element* e, void * thunk, ErrorHandler * errh){
+	multicastuser * me = (multicastuser *) e;
+	IPAddress x = 0;
+	if(cp_va_kparse(conf, me, errh, "group", cpkM, cpIPAddress, &x, cpEnd) < 0) return -1;
+
+	//make packet with headroom for ip and ether headers
+	//Data contains the data for the igmp packet
+	//should start writing this data at an ofset determined by ip and ether header
+	int tailroom = 0;
+	int headroom = sizeof(click_ip)+sizeof(click_ether);
+	int packetsize = sizeof(MulticastMessage);
+	WritablePacket* p = Packet::make(headroom, 0, packetsize, tailroom);
+	if(p == 0){
+	  click_chatter("cannot make packet!");
+	  return 0;
+	}
+	memset(p->data(), 0, p->length());
+
+	MulticastMessage* format = (MulticastMessage*)p->data();
+
+	//Set recordtype to 3 (change_to_include_mode) and exclude nothing
+	//= Leave
 	Record* record = new Record();
 	record->RecordType = 3;
 	record->AuxDataLen = 0;
-	record->NumSources = htons(1);
+	record->NumSources = 0;
 	record->MulticastAddress = IPAddress(x);
-	record->source = IPAddress("192.168.1.1");
 
 	format->Type = 0x22;
 	format->Reserved1 = 0;
@@ -72,6 +117,7 @@ int multicastuser::join(const String& conf, Element* e, void * thunk, ErrorHandl
 
 void multicastuser::add_handlers(){
 	add_write_handler("join", &join, (void*)0);
+	add_write_handler("leave", &leave, (void*)0);
 }
 
 CLICK_ENDDECLS

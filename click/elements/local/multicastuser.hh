@@ -16,6 +16,7 @@ class multicastuser : public Element {
 		
 		void push(int, Packet *);
 		static int join(const String &conf, Element *e, void * thunk, ErrorHandler * errh);
+		static int leave(const String &conf, Element *e, void * thunk, ErrorHandler * errh);
 		void add_handlers();
 	private:
 		uint32_t maxSize;

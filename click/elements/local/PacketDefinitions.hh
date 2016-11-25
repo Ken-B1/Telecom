@@ -5,6 +5,7 @@
 struct Record{
   uint8_t RecordType;
   uint8_t AuxDataLen;
+  //Numsources will be default 0 since there is only one source 
   uint16_t NumSources;
   IPAddress MulticastAddress;
   //Source is not used here since we only have one source
