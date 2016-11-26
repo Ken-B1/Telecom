@@ -23,7 +23,6 @@ int QueryGenerator::configure(Vector<String> &conf, ErrorHandler *errh) {
 }
 
 void QueryGenerator::push(int, Packet* p){
-	click_chatter("Sending a query");
 
 	WritablePacket *q = p->uniqueify();
 	click_ip* ipHdr = (click_ip*)q->data();
@@ -41,6 +40,7 @@ void QueryGenerator::push(int, Packet* p){
 		IPAddress group = record.MulticastAddress;
 
 		if(recordtype == 3){
+			click_chatter("Sending a query");
 			//A include 'Nothing' state update is received (aka a leave), so query other members of group for status
 			//make packet with headroom for ip and ether headers
 			//Data contains the data for the igmp packet

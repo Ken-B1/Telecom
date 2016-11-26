@@ -44,10 +44,14 @@ void IGMPStateupdate::push(int s, Packet* p){
 		IPAddress group = record.MulticastAddress;
 
 		switch(recordtype){
+			case 2: //Received an exclude (join) querry responce
+				click_chatter("Query membership report received");
+				this->infoBase->includeRecord(source, group);
+				break;
 			case 3: //Received a include record == leave
 				click_chatter("Change to include record has been received");
-				//Change names to correctly represent shit
-				this->infoBase ->excludeRecord(source, group);
+				//Change names to correctly represent the include/exclude
+				this->infoBase->excludeRecord(source, group);
 				output(0).push(p);
 				break;
 			case 4: //Received a exclude record == join
