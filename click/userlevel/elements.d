@@ -177,14 +177,15 @@ elements.o: elements.cc /usr/include/stdc-predef.h \
  ../elements/userlevel/todevice.hh ../elements/userlevel/fromdevice.hh \
  ../elements/standard/strideswitch.hh ../elements/standard/stridesched.hh \
  ../elements/standard/staticswitch.hh \
- ../elements/standard/randomswitch.hh ../elements/analysis/timerange.hh \
- ../elements/test/blockthread.hh ../elements/tcpudp/tcpipsend.hh \
- ../include/clicknet/tcp.h ../elements/standard/truncate.hh \
- ../elements/standard/rrsched.hh ../elements/standard/painttee.hh \
- ../elements/standard/paintswitch.hh ../elements/standard/discard.hh \
- ../elements/standard/checklength.hh ../elements/simple/simpleidle.hh \
- ../elements/local/Routerstate.hh ../elements/ethernet/arptable.hh \
- ../include/click/list.hh ../elements/analysis/ipsumdump_link.hh \
+ ../elements/standard/randomswitch.hh ../elements/local/UserinfoBase.hh \
+ ../elements/analysis/timerange.hh ../elements/test/blockthread.hh \
+ ../elements/tcpudp/tcpipsend.hh ../include/clicknet/tcp.h \
+ ../elements/standard/truncate.hh ../elements/standard/rrsched.hh \
+ ../elements/standard/painttee.hh ../elements/standard/paintswitch.hh \
+ ../elements/standard/discard.hh ../elements/standard/checklength.hh \
+ ../elements/simple/simpleidle.hh ../elements/local/Routerstate.hh \
+ ../elements/ethernet/arptable.hh ../include/click/list.hh \
+ ../elements/analysis/ipsumdump_link.hh \
  ../elements/analysis/ipsumdumpinfo.hh ../include/click/straccum.hh \
  ../elements/userlevel/umlswitch.hh \
  /usr/include/x86_64-linux-gnu/sys/un.h ../elements/userlevel/socket.hh \
@@ -277,44 +278,44 @@ elements.o: elements.cc /usr/include/stdc-predef.h \
  ../elements/test/nulltask.hh ../elements/tcpudp/tcpfragmenter.hh \
  ../elements/standard/randomerror.hh ../elements/standard/quitwatcher.hh \
  ../elements/standard/flowinfo.hh ../elements/standard/delayshaper.hh \
- ../elements/local/QueryGenerator.hh ../elements/icmp/icmppingencap.hh \
- ../elements/icmp/checkicmpheader.hh ../elements/ethernet/vlanencap.hh \
- ../elements/ethernet/vlandecap.hh ../elements/ethernet/ethermirror.hh \
- ../elements/ethernet/ensureether.hh \
+ ../elements/local/QueryResponder.hh ../elements/local/QueryGenerator.hh \
+ ../elements/icmp/icmppingencap.hh ../elements/icmp/checkicmpheader.hh \
+ ../elements/ethernet/vlanencap.hh ../elements/ethernet/vlandecap.hh \
+ ../elements/ethernet/ethermirror.hh ../elements/ethernet/ensureether.hh \
  ../elements/analysis/aggregatelast.hh \
  ../elements/userlevel/torawsocket.hh \
  ../elements/test/neighborhoodtest.hh ../elements/tcpudp/udpipencap.hh \
  ../elements/standard/suppressor.hh ../elements/standard/classifier.hh \
  ../elements/standard/classification.hh \
  ../elements/standard/checkcrc32.hh ../elements/local/MulticastUser.hh \
- ../elements/ip/sortediplookup.hh ../elements/ip/lineariplookup.hh \
- ../elements/ip/ipoutputcombo.hh ../elements/ip/directiplookup.hh \
- ../elements/ethernet/arpquerier.hh ../elements/ethernet/arptable.hh \
- ../elements/analysis/timefilter.hh ../elements/analysis/anonipaddr.hh \
- ../elements/analysis/aggcounter.hh ../elements/userlevel/todump.hh \
- ../elements/userlevel/fromsocket.hh ../elements/test/tokenbuckettest.hh \
- ../elements/test/comparepackets.hh ../elements/tcpudp/udprewriter.hh \
- ../elements/tcpudp/tcprewriter.hh ../elements/standard/unstrip.hh \
- ../elements/standard/nullelement.hh ../elements/standard/align.hh \
- ../elements/ip/unstripipheader.hh ../elements/ip/setrandipaddress.hh \
- ../elements/ip/rangeiplookup.hh ../elements/ip/directiplookup.hh \
- ../elements/ip/radixiplookup.hh ../elements/ip/ipinputcombo.hh \
- ../elements/icmp/icmpipencap.hh ../elements/userlevel/rawsocket.hh \
- ../elements/test/schedordertest.hh ../elements/standard/simplequeue.hh \
- ../elements/tcpudp/iprewriter.hh ../elements/tcpudp/tcprewriter.hh \
- ../elements/tcpudp/udprewriter.hh ../elements/standard/unqueue2.hh \
- ../elements/standard/striptonet.hh ../elements/standard/setcrc32.hh \
- ../elements/standard/checkpaint.hh ../elements/ip/ipfieldinfo.hh \
- ../elements/ip/ipaddrrewriter.hh ../elements/ip/decipttl.hh \
- ../elements/ip/checkipheader2.hh ../elements/ip/checkipheader.hh \
- ../elements/icmp/icmpsendpings.hh ../elements/icmp/icmprewriter.hh \
- ../elements/ethernet/arpfaker.hh ../elements/app/ftpportmapper.hh \
- ../elements/tcpudp/tcprewriter.hh ../elements/userlevel/tosocket.hh \
- ../elements/userlevel/khandlerproxy.hh ../elements/userlevel/fromhost.hh \
- ../elements/test/queueyanktest.hh ../elements/test/hashtabletest.hh \
- ../elements/test/confparsetest.hh ../elements/standard/strip.hh \
- ../elements/standard/counter.hh ../include/click/llrpc.h \
- /usr/include/x86_64-linux-gnu/sys/ioctl.h \
+ ../elements/local/UserinfoBase.hh ../elements/ip/sortediplookup.hh \
+ ../elements/ip/lineariplookup.hh ../elements/ip/ipoutputcombo.hh \
+ ../elements/ip/directiplookup.hh ../elements/ethernet/arpquerier.hh \
+ ../elements/ethernet/arptable.hh ../elements/analysis/timefilter.hh \
+ ../elements/analysis/anonipaddr.hh ../elements/analysis/aggcounter.hh \
+ ../elements/userlevel/todump.hh ../elements/userlevel/fromsocket.hh \
+ ../elements/test/tokenbuckettest.hh ../elements/test/comparepackets.hh \
+ ../elements/tcpudp/udprewriter.hh ../elements/tcpudp/tcprewriter.hh \
+ ../elements/standard/unstrip.hh ../elements/standard/nullelement.hh \
+ ../elements/standard/align.hh ../elements/ip/unstripipheader.hh \
+ ../elements/ip/setrandipaddress.hh ../elements/ip/rangeiplookup.hh \
+ ../elements/ip/directiplookup.hh ../elements/ip/radixiplookup.hh \
+ ../elements/ip/ipinputcombo.hh ../elements/icmp/icmpipencap.hh \
+ ../elements/userlevel/rawsocket.hh ../elements/test/schedordertest.hh \
+ ../elements/standard/simplequeue.hh ../elements/tcpudp/iprewriter.hh \
+ ../elements/tcpudp/tcprewriter.hh ../elements/tcpudp/udprewriter.hh \
+ ../elements/standard/unqueue2.hh ../elements/standard/striptonet.hh \
+ ../elements/standard/setcrc32.hh ../elements/standard/checkpaint.hh \
+ ../elements/ip/ipfieldinfo.hh ../elements/ip/ipaddrrewriter.hh \
+ ../elements/ip/decipttl.hh ../elements/ip/checkipheader2.hh \
+ ../elements/ip/checkipheader.hh ../elements/icmp/icmpsendpings.hh \
+ ../elements/icmp/icmprewriter.hh ../elements/ethernet/arpfaker.hh \
+ ../elements/app/ftpportmapper.hh ../elements/tcpudp/tcprewriter.hh \
+ ../elements/userlevel/tosocket.hh ../elements/userlevel/khandlerproxy.hh \
+ ../elements/userlevel/fromhost.hh ../elements/test/queueyanktest.hh \
+ ../elements/test/hashtabletest.hh ../elements/test/confparsetest.hh \
+ ../elements/standard/strip.hh ../elements/standard/counter.hh \
+ ../include/click/llrpc.h /usr/include/x86_64-linux-gnu/sys/ioctl.h \
  /usr/include/x86_64-linux-gnu/bits/ioctls.h \
  /usr/include/x86_64-linux-gnu/asm/ioctls.h \
  /usr/include/asm-generic/ioctls.h /usr/include/linux/ioctl.h \
@@ -864,6 +865,8 @@ elements.o: elements.cc /usr/include/stdc-predef.h \
 
 ../elements/standard/randomswitch.hh:
 
+../elements/local/UserinfoBase.hh:
+
 ../elements/analysis/timerange.hh:
 
 ../elements/test/blockthread.hh:
@@ -1172,6 +1175,8 @@ elements.o: elements.cc /usr/include/stdc-predef.h \
 
 ../elements/standard/delayshaper.hh:
 
+../elements/local/QueryResponder.hh:
+
 ../elements/local/QueryGenerator.hh:
 
 ../elements/icmp/icmppingencap.hh:
@@ -1203,6 +1208,8 @@ elements.o: elements.cc /usr/include/stdc-predef.h \
 ../elements/standard/checkcrc32.hh:
 
 ../elements/local/MulticastUser.hh:
+
+../elements/local/UserinfoBase.hh:
 
 ../elements/ip/sortediplookup.hh:
 
