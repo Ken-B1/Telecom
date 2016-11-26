@@ -18,13 +18,22 @@ elementclass Client {
 
 	ip :: Strip(14)
 		-> CheckIPHeader()
+		-> IGMPcheck :: IGMPLookup(INFOBASE infoBase)
 		-> rt :: StaticIPLookup(
 					$address:ip/32 0,
 					$address:ipnet 0,
-					0.0.0.0/0.0.0.0 $gateway 1,
-					224.0.0.0/8 2)
+					0.0.0.0/0.0.0.0 $gateway 1)
 		-> [1]output;
+
+	//IGMP packets of concern to this user
+	//Sends a queryresponse only if this user is still part of the querried group
 	
+	IGMPcheck[1]
+		-> QueryResponder
+		-> IPEncap(2, $address, multicast_report_address, TTL 1)
+		-> EtherEncap(0x0800, $address, $gateway)
+		-> output;
+
 	rt[1]
 		-> DropBroadcasts
 		-> ipgw :: IPGWOptions($address)
@@ -33,10 +42,6 @@ elementclass Client {
 		-> frag :: IPFragmenter(1500)
 		-> arpq :: ARPQuerier($address)
 		-> output;
-
-	//Responder to querys
-	rt[2]
-		-> [1]output;
 
 	ipgw[1]
 		-> ICMPError($address, parameterproblem)
@@ -52,7 +57,6 @@ elementclass Client {
 
 	// Incoming Packets
 	input
-		-> QueryResponder
 		-> HostEtherFilter($address)  //Filter packets not intended for this host
 		-> in_cl :: Classifier(12/0806 20/0001, 12/0806 20/0002, 12/0800)  //(arp requests, arp replies, ip packets)
 		-> arp_res :: ARPResponder($address)

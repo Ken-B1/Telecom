@@ -25,19 +25,15 @@ int UserinfoBase::configure(Vector<String> &conf, ErrorHandler *errh) {
 
 
 void UserinfoBase::includeGroup(IPAddress group){
-	click_chatter("Added group to client");
 	if(!this->hasGroup(group)){
-		click_chatter("Added group to client");
 		this->states.push_back(group);
 	}
 }
 
 void UserinfoBase::excludeGroup(IPAddress group){
-	click_chatter("Removed group to client");
 	if(this->hasGroup(group)){
 		for(Groups::iterator it = this->states.begin(); it != this->states.end(); ++it){
 			if(group == *it){
-				click_chatter("Removed group to client");
 				this->states.erase(it);
 				break;
 			}

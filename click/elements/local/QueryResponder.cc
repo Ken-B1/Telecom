@@ -23,16 +23,28 @@ int QueryResponder::configure(Vector<String> &conf, ErrorHandler *errh) {
 }
 
 void QueryResponder::push(int, Packet* p){
-	click_chatter("Received query packet");
 	WritablePacket* q = p->uniqueify();
 	
 	click_ip* ipheader = (click_ip*)q->data();
 	MulticastQuery* Queryheader = (MulticastQuery*)(ipheader+1);
+	IPAddress group = Queryheader->GroupAddress;
+
+
+	//Set recordtype to 2 (MODE_IS_EXCLUDE) and exclude nothing
+	//= "Join" or more specifically, confirm that this user is still in the group
+	Record* queryrecord = new Record();
+	queryrecord->RecordType = 2;
+	queryrecord->AuxDataLen = 0;
+	queryrecord->NumSources = 0;
+	queryrecord->MulticastAddress = group;
+
+	WritablePacket* query = this->generatePacket();
+	MulticastMessage* format = (MulticastMessage*)query->data();
+	format->record = *queryrecord;
 	
 
-
-	//click_chatter("Sending a request to join network");
-	output(0).push(p);
+	click_chatter("Sending a query response to join network");
+	output(0).push(query);
 }
 
 WritablePacket* QueryResponder::generatePacket(){
@@ -60,6 +72,7 @@ WritablePacket* QueryResponder::generatePacket(){
 	format->Reserved2 = 0;
 	int16_t numrecords = 0x1;
 	format->NumRecords = htons(numrecords);
+
 	return p;
 }
 

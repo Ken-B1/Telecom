@@ -297,25 +297,26 @@ elements.o: elements.cc /usr/include/stdc-predef.h \
  ../elements/test/tokenbuckettest.hh ../elements/test/comparepackets.hh \
  ../elements/tcpudp/udprewriter.hh ../elements/tcpudp/tcprewriter.hh \
  ../elements/standard/unstrip.hh ../elements/standard/nullelement.hh \
- ../elements/standard/align.hh ../elements/ip/unstripipheader.hh \
- ../elements/ip/setrandipaddress.hh ../elements/ip/rangeiplookup.hh \
- ../elements/ip/directiplookup.hh ../elements/ip/radixiplookup.hh \
- ../elements/ip/ipinputcombo.hh ../elements/icmp/icmpipencap.hh \
- ../elements/userlevel/rawsocket.hh ../elements/test/schedordertest.hh \
- ../elements/standard/simplequeue.hh ../elements/tcpudp/iprewriter.hh \
- ../elements/tcpudp/tcprewriter.hh ../elements/tcpudp/udprewriter.hh \
- ../elements/standard/unqueue2.hh ../elements/standard/striptonet.hh \
- ../elements/standard/setcrc32.hh ../elements/standard/checkpaint.hh \
- ../elements/ip/ipfieldinfo.hh ../elements/ip/ipaddrrewriter.hh \
- ../elements/ip/decipttl.hh ../elements/ip/checkipheader2.hh \
- ../elements/ip/checkipheader.hh ../elements/icmp/icmpsendpings.hh \
- ../elements/icmp/icmprewriter.hh ../elements/ethernet/arpfaker.hh \
- ../elements/app/ftpportmapper.hh ../elements/tcpudp/tcprewriter.hh \
- ../elements/userlevel/tosocket.hh ../elements/userlevel/khandlerproxy.hh \
- ../elements/userlevel/fromhost.hh ../elements/test/queueyanktest.hh \
- ../elements/test/hashtabletest.hh ../elements/test/confparsetest.hh \
- ../elements/standard/strip.hh ../elements/standard/counter.hh \
- ../include/click/llrpc.h /usr/include/x86_64-linux-gnu/sys/ioctl.h \
+ ../elements/standard/align.hh ../elements/local/IGMPLookup.hh \
+ ../elements/ip/unstripipheader.hh ../elements/ip/setrandipaddress.hh \
+ ../elements/ip/rangeiplookup.hh ../elements/ip/directiplookup.hh \
+ ../elements/ip/radixiplookup.hh ../elements/ip/ipinputcombo.hh \
+ ../elements/icmp/icmpipencap.hh ../elements/userlevel/rawsocket.hh \
+ ../elements/test/schedordertest.hh ../elements/standard/simplequeue.hh \
+ ../elements/tcpudp/iprewriter.hh ../elements/tcpudp/tcprewriter.hh \
+ ../elements/tcpudp/udprewriter.hh ../elements/standard/unqueue2.hh \
+ ../elements/standard/striptonet.hh ../elements/standard/setcrc32.hh \
+ ../elements/standard/checkpaint.hh ../elements/ip/ipfieldinfo.hh \
+ ../elements/ip/ipaddrrewriter.hh ../elements/ip/decipttl.hh \
+ ../elements/ip/checkipheader2.hh ../elements/ip/checkipheader.hh \
+ ../elements/icmp/icmpsendpings.hh ../elements/icmp/icmprewriter.hh \
+ ../elements/ethernet/arpfaker.hh ../elements/app/ftpportmapper.hh \
+ ../elements/tcpudp/tcprewriter.hh ../elements/userlevel/tosocket.hh \
+ ../elements/userlevel/khandlerproxy.hh ../elements/userlevel/fromhost.hh \
+ ../elements/test/queueyanktest.hh ../elements/test/hashtabletest.hh \
+ ../elements/test/confparsetest.hh ../elements/standard/strip.hh \
+ ../elements/standard/counter.hh ../include/click/llrpc.h \
+ /usr/include/x86_64-linux-gnu/sys/ioctl.h \
  /usr/include/x86_64-linux-gnu/bits/ioctls.h \
  /usr/include/x86_64-linux-gnu/asm/ioctls.h \
  /usr/include/asm-generic/ioctls.h /usr/include/linux/ioctl.h \
@@ -1246,6 +1247,8 @@ elements.o: elements.cc /usr/include/stdc-predef.h \
 ../elements/standard/nullelement.hh:
 
 ../elements/standard/align.hh:
+
+../elements/local/IGMPLookup.hh:
 
 ../elements/ip/unstripipheader.hh:
 

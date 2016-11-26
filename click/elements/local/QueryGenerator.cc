@@ -79,50 +79,6 @@ void QueryGenerator::push(int, Packet* p){
 	}
 }
 
-/*
-int QueryGenerator::join(const String& conf, Element* e, void * thunk, ErrorHandler * errh){
-	multicastuser * me = (multicastuser *) e;
-	IPAddress x = 0;
-
-	//make packet with headroom for ip and ether headers
-	//Data contains the data for the igmp packet
-	//should start writing this data at an ofset determined by ip and ether header
-	int tailroom = 0;
-	int headroom = sizeof(click_ip)+sizeof(click_ether);
-	int packetsize = sizeof(MulticastMessage);
-	WritablePacket* p = Packet::make(headroom, 0, packetsize, tailroom);
-	if(p == 0){
-	  click_chatter("cannot make packet!");
-	  return 0;
-	}
-	memset(p->data(), 0, p->length());
-
-	MulticastMessage* format = (MulticastMessage*)p->data();
-
-	//Set recordtype to 4 (change_to_exclude_mode) and exclude nothing
-	//= Join
-	Record* record = new Record();
-	record->RecordType = 4;
-	record->AuxDataLen = 0;
-	record->NumSources = 0;
-	record->MulticastAddress = IPAddress(x);
-
-	format->Type = 0x22;
-	format->Reserved1 = 0;
-	format->Checksum = 0;
-	format->Reserved2 = 0;
-	int16_t numrecords = 0x1;
-	format->NumRecords = htons(numrecords);
-	format->record = *record;
-	
-	uint16_t checksum = format->Type + format->NumRecords + format->NumRecords + record->RecordType + ~record->NumSources + record->MulticastAddress + record->source;
-	format->Checksum = ~checksum;
-
-
-        e->push(1, p);	
-	return 0; 
-}
-*/
 
 CLICK_ENDDECLS
 EXPORT_ELEMENT(QueryGenerator)

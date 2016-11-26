@@ -99,6 +99,7 @@ WritablePacket* multicastuser::generatePacket(){
 	format->Reserved2 = 0;
 	int16_t numrecords = 0x1;
 	format->NumRecords = htons(numrecords);
+
 	return p;
 }
 

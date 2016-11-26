@@ -26,6 +26,8 @@ class UserinfoBase : public Element {
 		void includeGroup(IPAddress);
 		void excludeGroup(IPAddress);
 
+		//Check if this user is part of the group
+		bool hasGroup(IPAddress);
 
 		/*
 		  Handlers for this element
@@ -39,9 +41,6 @@ class UserinfoBase : public Element {
 		
 	private:
 		Groups states;
-
-		//Check if the group already exists
-		bool hasGroup(IPAddress);
 };
 
 CLICK_ENDDECLS
