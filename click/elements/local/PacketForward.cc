@@ -29,13 +29,12 @@ void PacketForward::push(int s, Packet* p){
 	click_ip *iph = (click_ip *)p->data();
 
 	Vector<IPAddress> receivedNetworks = this->infoBase->getNetworks();
-	
+	Vector<IPAddress> groups = this->infoBase->getGroups();
 	if(iph->ip_dst == IPAddress("224.0.0.1")){
 		//All systems querry
-		WritablePacket *q = p->uniqueify();
-		WritablePacket *r = p->uniqueify();
-		output(0).push(q);
-		output(1).push(r);
+		output(0).push(p->clone());
+		output(1).push(p->clone());
+		return;
 	}
 	
 	States receivedStates = this->infoBase->getStates();
@@ -43,8 +42,7 @@ void PacketForward::push(int s, Packet* p){
 	for(Vector<IPAddress>::iterator network = receivedNetworks.begin(); network != receivedNetworks.end(); ++network){		        
 		if(receivedStates[*network][iph->ip_dst]){
 			click_chatter("Forwarding packet to client");
-			WritablePacket *q = p->uniqueify();
-			output(i).push(q);
+			output(i).push(p->clone());
 		}
 		i++;
 	}
