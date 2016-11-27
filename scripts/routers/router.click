@@ -29,7 +29,8 @@ elementclass Router {
 					$server_address:ipnet 1,
 					$client1_address:ipnet 2,
 					$client2_address:ipnet 3,
-					multicast_report_address:ip/32 4);
+					multicast_report_address:ip/32 4,
+					multicast_client_address:ip/32 5);
 
 	// ARP responses are copied to each ARPQuerier and the host.
 	arpt :: Tee (3);
@@ -89,15 +90,28 @@ elementclass Router {
 		-> ip;
 	
 
+	//Multicast source packets
+	rt[5]
+		-> forwarder :: PacketForward(INFOBASE infoBase)
+		-> EtherEncap(0x0800, multicast_server_address:eth, multicast_client_address:eth)
+		-> ToDump("test2.pcap")
+		-> [1]output
+
+	forwarder[1]
+		-> EtherEncap(0x0800, multicast_server_address:eth, multicast_client_address:eth )
+		-> [2]output
+
 	//Multicast report messages 
+	//The query generator pushed groupbased querries to output 0 and global querries to output 1
 	rt[4]
 		-> IGMPStateupdate(INFOBASE infoBase)
-		-> QueryGenerator
-		//Temporary useless encap for debugging
+		-> query :: QueryGenerator
 		-> IPEncap(2, $client1_address, multicast_report_address, TTL 1)
-		-> client1_arpq
+		-> forwarder
 
-
+	query[1]
+		-> IPEncap(2, 224.0.0.22, 224.0.0.1)
+		-> forwarder
 	// Local delivery
 	rt[0]
 		-> [3]output

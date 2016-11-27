@@ -44,13 +44,9 @@ void IGMPRouterState::includeRecord(IPAddress network, IPAddress group){
 
 void IGMPRouterState::excludeRecord(IPAddress network, IPAddress group){
 	click_chatter("Set record to exclude");
-	/*Set all entries for this group to false
-	  For clients that still want to belong to this group, a query response will be received
-	  and their entries will be reverted to true
+	/*Set entry for this combination to false
 	*/
-	for(Vector<IPAddress>::iterator it = this->networks.begin(); it != this->networks.end(); ++it){
-		this->states[*it][group] = false;
-	}
+	this->states[network][group] = false;
 }
 
 String IGMPRouterState::getTextualRepresentation(){
@@ -68,6 +64,17 @@ String IGMPRouterState::getTextualRepresentation(){
 	return returnvalue;
 }
 
+Vector<IPAddress> IGMPRouterState::getNetworks(){
+	return this->networks;
+}
+
+Vector<IPAddress> IGMPRouterState::getGroups(){
+	return this->groups;
+}
+
+States IGMPRouterState::getStates(){
+	return this->states;
+}
 
 //Below are the handlers for IGMPRouterState
 String IGMPRouterState::read(Element* e, void * thunk){

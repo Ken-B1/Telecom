@@ -29,6 +29,9 @@ class UserinfoBase : public Element {
 		//Check if this user is part of the group
 		bool hasGroup(IPAddress);
 
+
+		//Getter for states
+		Groups getstates();
 		/*
 		  Handlers for this element
 		    Read: gives a textual representation of the current states

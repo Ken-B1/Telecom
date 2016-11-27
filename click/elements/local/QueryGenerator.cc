@@ -62,7 +62,8 @@ void QueryGenerator::push(int, Packet* p){
 			format->Type = 0x11;
 			format->MRC = 0;
 			format->Checksum = 0;
-			format->GroupAddress = record.MulticastAddress;
+			//Change to non hardcoded
+			format->GroupAddress = IPAddress("0.0.0.0");
 			format->Reserved = 0;
 			format->Suppress = false;
 			format->QRV = 0;
@@ -70,7 +71,7 @@ void QueryGenerator::push(int, Packet* p){
 			format->NumSources = htons(1);
 			format->Source = record.source;
 
-			output(0).push(Query);
+			output(1).push(Query);
 		}else{
 			//Packet is not a leave update report packet, so no action should be taken
 			return;

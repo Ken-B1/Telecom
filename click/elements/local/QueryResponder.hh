@@ -2,6 +2,7 @@
 #define CLICK_QUERYRESPONDER_HH
 #include <click/element.hh>
 #include "PacketDefinitions.hh"
+#include "UserinfoBase.hh"
 
 CLICK_DECLS
 class QueryResponder : public Element { 
@@ -17,6 +18,7 @@ class QueryResponder : public Element {
 		void push(int, Packet *);
 	private:
 		//Method that generates a packet without any records in it
+		UserinfoBase* infoBase;
 		WritablePacket* generatePacket();
 };
 

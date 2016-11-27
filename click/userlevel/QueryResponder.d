@@ -85,6 +85,9 @@ QueryResponder.o: ../elements/local/QueryResponder.cc \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
  /usr/include/x86_64-linux-gnu/bits/mathinline.h \
  ../include/click/handler.hh ../elements/local/PacketDefinitions.hh \
+ ../elements/local/UserinfoBase.hh ../include/click/hashtable.hh \
+ ../include/click/pair.hh ../include/click/hashcode.hh \
+ ../include/click/hashcontainer.hh ../include/click/hashallocator.hh \
  /usr/include/c++/5/iostream /usr/include/c++/5/ostream \
  /usr/include/c++/5/ios /usr/include/c++/5/iosfwd \
  /usr/include/c++/5/bits/stringfwd.h /usr/include/c++/5/bits/memoryfwd.h \
@@ -373,6 +376,18 @@ QueryResponder.o: ../elements/local/QueryResponder.cc \
 ../include/click/handler.hh:
 
 ../elements/local/PacketDefinitions.hh:
+
+../elements/local/UserinfoBase.hh:
+
+../include/click/hashtable.hh:
+
+../include/click/pair.hh:
+
+../include/click/hashcode.hh:
+
+../include/click/hashcontainer.hh:
+
+../include/click/hashallocator.hh:
 
 /usr/include/c++/5/iostream:
 

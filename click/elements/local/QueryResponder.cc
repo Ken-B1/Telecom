@@ -18,33 +18,34 @@ QueryResponder::~ QueryResponder()
 {}
 
 int QueryResponder::configure(Vector<String> &conf, ErrorHandler *errh) {
-	if (cp_va_kparse(conf, this,errh,cpEnd) < 0) return -1;
+	if (cp_va_kparse(conf, this,errh,"INFOBASE", cpkM, cpElement, &infoBase, cpEnd) < 0) return -1;
 	return 0;
 }
 
 void QueryResponder::push(int, Packet* p){
 	WritablePacket* q = p->uniqueify();
-	
+	Groups usergroups = this->infoBase->getstates();
 	click_ip* ipheader = (click_ip*)q->data();
 	MulticastQuery* Queryheader = (MulticastQuery*)(ipheader+1);
 	IPAddress group = Queryheader->GroupAddress;
 
+	for(Groups::iterator it = usergroups.begin(); it != usergroups.end(); ++it){			
+		//Set recordtype to 2 (MODE_IS_EXCLUDE) and exclude nothing
+		//= "Join" or more specifically, confirm that this user is still in the group
+		Record* queryrecord = new Record();
+		queryrecord->RecordType = 2;
+		queryrecord->AuxDataLen = 0;
+		queryrecord->NumSources = 0;
+		queryrecord->MulticastAddress = *it;
 
-	//Set recordtype to 2 (MODE_IS_EXCLUDE) and exclude nothing
-	//= "Join" or more specifically, confirm that this user is still in the group
-	Record* queryrecord = new Record();
-	queryrecord->RecordType = 2;
-	queryrecord->AuxDataLen = 0;
-	queryrecord->NumSources = 0;
-	queryrecord->MulticastAddress = group;
-
-	WritablePacket* query = this->generatePacket();
-	MulticastMessage* format = (MulticastMessage*)query->data();
-	format->record = *queryrecord;
+		WritablePacket* query = this->generatePacket();
+		MulticastMessage* format = (MulticastMessage*)query->data();
+		format->record = *queryrecord;
 	
 
-	click_chatter("Sending a query response to join network");
-	output(0).push(query);
+		click_chatter("Sending a query response to join network");
+		output(0).push(query);
+	}
 }
 
 WritablePacket* QueryResponder::generatePacket(){

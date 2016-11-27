@@ -41,6 +41,10 @@ void UserinfoBase::excludeGroup(IPAddress group){
 	}
 }
 
+Groups UserinfoBase::getstates(){
+	return this->states;
+}
+
 String UserinfoBase::getTextualRepresentation(){
 	String returnvalue = "";	
 	for(Groups::iterator it = this->states.begin(); it != this->states.end(); ++it){

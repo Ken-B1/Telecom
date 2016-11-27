@@ -43,7 +43,9 @@ class IGMPRouterState : public Element {
 		void add_handlers();
 
 		String getTextualRepresentation();
-
+		States getStates();
+		Vector<IPAddress> getGroups();
+		Vector<IPAddress> getNetworks();
 		
 	private:
 		States states;
