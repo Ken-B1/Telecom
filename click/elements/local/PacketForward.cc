@@ -41,7 +41,6 @@ void PacketForward::push(int s, Packet* p){
 	int i=0;
 	for(Vector<IPAddress>::iterator network = receivedNetworks.begin(); network != receivedNetworks.end(); ++network){		        
 		if(receivedStates[*network][iph->ip_dst]){
-			click_chatter("Forwarding packet to client");
 			output(i).push(p->clone());
 		}
 		i++;

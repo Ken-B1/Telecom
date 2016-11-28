@@ -40,7 +40,6 @@ void QueryGenerator::push(int, Packet* p){
 		IPAddress group = record.MulticastAddress;
 
 		if(recordtype == 3){
-			click_chatter("Sending a query");
 			//A include 'Nothing' state update is received (aka a leave), so query other members of group for status
 			//make packet with headroom for ip and ether headers
 			//Data contains the data for the igmp packet
@@ -70,6 +69,8 @@ void QueryGenerator::push(int, Packet* p){
 			format->QQIC = 0;
 			format->NumSources = htons(1);
 			format->Source = record.source;
+
+			format->Checksum = click_in_cksum((unsigned char *)format, sizeof(MulticastQuery));
 
 			output(1).push(Query);
 		}else{

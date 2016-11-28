@@ -26,7 +26,6 @@ int PacketReroute::configure(Vector<String> &conf, ErrorHandler *errh) {
 }
 
 void PacketReroute::push(int s, Packet* p){
-	click_chatter("sending a packet with packetReroute");
 	
 	Vector<IPAddress> receivedGroups = this->infoBase->getGroups();
 	bool sentPackage=false;	

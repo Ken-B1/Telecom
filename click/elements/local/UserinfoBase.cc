@@ -48,7 +48,6 @@ Groups UserinfoBase::getstates(){
 String UserinfoBase::getTextualRepresentation(){
 	String returnvalue = "";	
 	for(Groups::iterator it = this->states.begin(); it != this->states.end(); ++it){
-		click_chatter("Text:");
 		returnvalue += it->unparse() + "\n";
 	}
 	click_chatter(returnvalue.c_str());

@@ -41,9 +41,9 @@ void QueryResponder::push(int, Packet* p){
 		WritablePacket* query = this->generatePacket();
 		MulticastMessage* format = (MulticastMessage*)query->data();
 		format->record = *queryrecord;
-	
 
-		click_chatter("Sending a query response to join network");
+		format->Checksum = click_in_cksum((unsigned char *)format, sizeof(MulticastMessage));	
+
 		output(0).push(query);
 	}
 }
@@ -73,6 +73,7 @@ WritablePacket* QueryResponder::generatePacket(){
 	format->Reserved2 = 0;
 	int16_t numrecords = 0x1;
 	format->NumRecords = htons(numrecords);
+
 
 	return p;
 }

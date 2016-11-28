@@ -26,7 +26,7 @@ AddressInfo(router_server_network_address 192.168.1.254/24 00:50:BA:85:84:A1);
 AddressInfo(multicast_server_address 192.168.1.1/24 00:50:BA:85:84:A2);
 
 AddressInfo(router_client_network1_address 192.168.2.254/24 00:50:BA:85:84:B1);
-AddressInfo(client21_address 192.168.2.2/24 00:50:BA:85:84:B2);
+AddressInfo(client21_address 192.168.2.1/24 00:50:BA:85:84:B2);
 AddressInfo(client22_address 192.168.2.2/24 00:50:BA:85:84:B3);
 
 AddressInfo(router_client_network2_address 192.168.3.254/24 00:50:BA:85:84:C1);
@@ -113,7 +113,7 @@ client_network2[3]
 	-> ToDump("client_network2.pcap");
 
 // Generate traffic for the multicast server.
-RatedSource("data", 1, -1, true)
+RatedSource("data", 1, -1, false)
 	-> DynamicUDPIPEncap(multicast_server_address:ip, 1234, multicast_client_address:ip, 1234) 
 	-> EtherEncap(0x0800, multicast_server_address:eth, multicast_server_address:eth) /// The MAC addresses here should be from the multicast_server to get past the HostEtherFilter. This way we can reuse the input from the network for the applications.
 	-> IPPrint("multicast_server -- transmitted a UDP packet")

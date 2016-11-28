@@ -3,11 +3,6 @@
 // Packets for the network are put on output 0
 // Packets for the host are put on output 1
 
-AddressInfo(client21_multicast_address 224.0.0.10/24 00:50:BA:85:84:B3);
-AddressInfo(client22_multicast_address 224.0.0.11/24 00:50:BA:85:84:B3);
-AddressInfo(client31_multicast_address 224.0.0.12/24 00:50:BA:85:84:B3);
-AddressInfo(client32_multicast_address 224.0.0.13/24 00:50:BA:85:84:B3);
-
 elementclass Client {
 	$address, $gateway |
 
@@ -34,7 +29,7 @@ elementclass Client {
 	//Sends a queryresponse only if this user is still part of the querried group
 	
 	IGMPcheck[1]
-		// Querryresponder will respond to a global querry, specific querries are for later
+		// Queryresponder will respond to a global querry, specific querries are for later
 		-> QueryResponder(INFOBASE infoBase)
 		-> IPEncap(2, $address, multicast_report_address, TTL 1)
 		-> EtherEncap(0x0800, $address, $gateway)

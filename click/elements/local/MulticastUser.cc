@@ -23,7 +23,6 @@ int multicastuser::configure(Vector<String> &conf, ErrorHandler *errh) {
 }
 
 void multicastuser::push(int, Packet* p){
-	click_chatter("Sending a request to join/leave network");
 	output(0).push(p);
 }
 
@@ -46,6 +45,8 @@ int multicastuser::join(const String& conf, Element* e, void * thunk, ErrorHandl
 	format->record = *record;
 
 
+	//Calculate checksum 
+	format->Checksum = click_in_cksum((unsigned char *)format, sizeof(MulticastMessage));
 	
         e->push(1, p);	
 	return 0; 
@@ -69,6 +70,8 @@ int multicastuser::leave(const String& conf, Element* e, void * thunk, ErrorHand
 	WritablePacket* p = me->generatePacket();
 	MulticastMessage* format = (MulticastMessage*)p->data();
 	format->record = *record;
+
+	format->Checksum = click_in_cksum((unsigned char *)format, sizeof(MulticastMessage));
 
         e->push(1, p);	
 	return 0; 
