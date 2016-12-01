@@ -110,7 +110,7 @@ elementclass Router {
 		-> forwarder
 
 	query[1]
-		-> IPEncap(2, 224.0.0.22, 224.0.0.1)
+		-> IPEncap(2, 224.0.0.22, 224.0.0.1, TTL 1)
 		-> forwarder
 	// Local delivery
 	rt[0]
