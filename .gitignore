@@ -1,4 +1,4 @@
 *.pcap
 docs/
-click/userlevel
-click/tools
+click/userlevel/
+click/tools/

@@ -98,7 +98,6 @@ elementclass Router {
 
 	forwarder[1]
 		-> EtherEncap(0x0800, multicast_server_address:eth, multicast_client_address:eth )
-		-> ToDump("test3.pcap")
 		-> [2]output
 
 	//Multicast report messages 
