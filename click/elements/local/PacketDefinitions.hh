@@ -29,9 +29,8 @@ struct MulticastQuery{
   uint8_t MRC;
   uint16_t Checksum;
   IPAddress GroupAddress;
-  int Reserved:4;
-  bool Suppress;
-  int QRV:3;
+  //The combination of the 4 reserved bits, the 1 supressbit and the 3 QRV bits
+  uint8_t ResvSQvr;
   uint8_t QQIC;
   //NumSources is default 1 because there is only 1 source
   uint16_t NumSources;

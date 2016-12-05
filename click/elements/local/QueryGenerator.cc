@@ -39,6 +39,14 @@ void QueryGenerator::push(int, Packet* p){
 		uint8_t recordtype = record.RecordType;
 		IPAddress group = record.MulticastAddress;
 
+		//Generate the Supress and QRV parameters
+		bool Suppress = 0;
+		int QRV = 2; //Should always be smaller than 8
+
+		//Shift suppress 3 bits to the left
+		uint8_t resvsqvr = ((int)Suppress << 3) + QRV;
+
+
 		if(recordtype == 3){
 			//A include 'Nothing' state update is received (aka a leave), so query other members of group for status
 			//make packet with headroom for ip and ether headers
@@ -63,9 +71,7 @@ void QueryGenerator::push(int, Packet* p){
 			format->Checksum = 0;
 			//Change to non hardcoded
 			format->GroupAddress = IPAddress("0.0.0.0");
-			format->Reserved = 0;
-			format->Suppress = false;
-			format->QRV = 0;
+			format->ResvSQvr = resvsqvr;
 			format->QQIC = 0;
 			format->NumSources = htons(1);
 			format->Source = record.source;

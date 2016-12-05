@@ -13,7 +13,9 @@ CLICK_DECLS
 
 
 UserinfoBase::UserinfoBase()
-{}
+{
+	this->QRV = 2;
+}
 
 UserinfoBase::~ UserinfoBase()
 {}
@@ -43,6 +45,10 @@ void UserinfoBase::excludeGroup(IPAddress group){
 
 Groups UserinfoBase::getstates(){
 	return this->states;
+}
+
+int UserinfoBase::getQRV(){
+	return this->QRV;
 }
 
 String UserinfoBase::getTextualRepresentation(){

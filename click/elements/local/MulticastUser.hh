@@ -26,6 +26,9 @@ class multicastuser : public Element {
 		//Infobase that holds currently joined groups
 		UserinfoBase* infoBase;
 		uint32_t maxSize;
+
+		//QRV variable
+		int QRV;
 };
 
 CLICK_ENDDECLS

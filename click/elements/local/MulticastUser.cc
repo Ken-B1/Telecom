@@ -12,7 +12,9 @@
 CLICK_DECLS
 
 multicastuser::multicastuser()
-{}
+{
+	this->QRV = 2;
+}
 
 multicastuser::~ multicastuser()
 {}
@@ -29,6 +31,7 @@ void multicastuser::push(int, Packet* p){
 int multicastuser::join(const String& conf, Element* e, void * thunk, ErrorHandler * errh){
 	multicastuser * me = (multicastuser *) e;
 	IPAddress x = 0;
+
 	if(cp_va_kparse(conf, me, errh, "group", cpkM, cpIPAddress, &x, cpEnd) < 0) return -1;
 
 	me->infoBase->includeGroup(x);
@@ -48,7 +51,9 @@ int multicastuser::join(const String& conf, Element* e, void * thunk, ErrorHandl
 	//Calculate checksum 
 	format->Checksum = click_in_cksum((unsigned char *)format, sizeof(MulticastMessage));
 	
-        e->push(1, p);	
+	for(int x = 0; x < me->QRV; x++){
+        	e->push(1, p->clone());	
+	}
 	return 0; 
 }
 
@@ -73,7 +78,9 @@ int multicastuser::leave(const String& conf, Element* e, void * thunk, ErrorHand
 
 	format->Checksum = click_in_cksum((unsigned char *)format, sizeof(MulticastMessage));
 
-        e->push(1, p);	
+	for(int x = 0; x < me->QRV; x++){
+        	e->push(1, p->clone());	
+	}
 	return 0; 
 }
 

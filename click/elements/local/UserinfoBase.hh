@@ -30,8 +30,11 @@ class UserinfoBase : public Element {
 		bool hasGroup(IPAddress);
 
 
-		//Getter for states
+		//Getters
 		Groups getstates();
+		int getQRV();
+
+		
 		/*
 		  Handlers for this element
 		    Read: gives a textual representation of the current states
@@ -44,6 +47,8 @@ class UserinfoBase : public Element {
 		
 	private:
 		Groups states;
+		//The current robustness variable value for this client
+		int QRV;
 };
 
 CLICK_ENDDECLS
