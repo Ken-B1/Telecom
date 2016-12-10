@@ -20,7 +20,7 @@ QueryGenerator::~ QueryGenerator()
 int QueryGenerator::configure(Vector<String> &conf, ErrorHandler *errh) {
 	if (cp_va_kparse(conf, this,errh,cpEnd) < 0) return -1;
 	timer.initialize(this);
-	timer.schedule_after_msec(1000);
+	timer.schedule_after_sec(120);
 	return 0;
 }
 
@@ -125,7 +125,7 @@ void QueryGenerator::run_timer(Timer* timer){
 	//Push query to global query output
 	output(1).push(Query);
 
-	timer->schedule_after_msec(1000);
+	timer->schedule_after_sec(120);
 }
 
 CLICK_ENDDECLS

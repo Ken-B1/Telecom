@@ -1,6 +1,7 @@
 #ifndef CLICK_MULTICASTUSER_HH
 #define CLICK_MULTICASTUSER_HH
 #include <click/element.hh>
+#include <click/timer.hh>
 #include "PacketDefinitions.hh"
 #include "UserinfoBase.hh"
 
@@ -19,6 +20,11 @@ class multicastuser : public Element {
 		static int join(const String &conf, Element *e, void * thunk, ErrorHandler * errh);
 		static int leave(const String &conf, Element *e, void * thunk, ErrorHandler * errh);
 		void add_handlers();
+
+		//Methods for timing
+		static void HandleExpire(Timer*, void*);
+		void send(Packet*);
+		int getQRV();
 	private:
 		//Method that generates a packet without any records in it
 		WritablePacket* generatePacket();
@@ -29,6 +35,16 @@ class multicastuser : public Element {
 
 		//QRV variable
 		int QRV;
+
+		//Timer for interval between resends
+		Timer timer;
+
+		//Struct with counter and packet
+		struct TimerData{
+			multicastuser* me;
+			Packet* p;
+			int counter;
+		};
 };
 
 CLICK_ENDDECLS
