@@ -2,6 +2,7 @@
 #define CLICK_QUERYGENERATOR_HH
 #include <click/element.hh>
 #include "PacketDefinitions.hh"
+#include <click/timer.hh>
 
 CLICK_DECLS
 class QueryGenerator : public Element { 
@@ -15,8 +16,11 @@ class QueryGenerator : public Element {
 		int configure(Vector<String>&, ErrorHandler*);
 		
 		void push(int, Packet*);
+		void run_timer(Timer*);
 	private:
 		uint32_t maxSize;
+		//Timer for general querries
+		Timer timer;
 };
 
 CLICK_ENDDECLS

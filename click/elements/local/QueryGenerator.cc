@@ -11,7 +11,7 @@
 
 CLICK_DECLS
 
-QueryGenerator::QueryGenerator()
+QueryGenerator::QueryGenerator(): timer(this)
 {}
 
 QueryGenerator::~ QueryGenerator()
@@ -19,6 +19,8 @@ QueryGenerator::~ QueryGenerator()
 
 int QueryGenerator::configure(Vector<String> &conf, ErrorHandler *errh) {
 	if (cp_va_kparse(conf, this,errh,cpEnd) < 0) return -1;
+	timer.initialize(this);
+	timer.schedule_after_msec(1000);
 	return 0;
 }
 
@@ -69,8 +71,7 @@ void QueryGenerator::push(int, Packet* p){
 			format->Type = 0x11;
 			format->MRC = 0;
 			format->Checksum = 0;
-			//Change to non hardcoded
-			format->GroupAddress = IPAddress("0.0.0.0");
+			format->GroupAddress = group;
 			format->ResvSQvr = resvsqvr;
 			format->QQIC = 0;
 			format->NumSources = htons(1);
@@ -78,7 +79,7 @@ void QueryGenerator::push(int, Packet* p){
 
 			format->Checksum = click_in_cksum((unsigned char *)format, sizeof(MulticastQuery));
 
-			output(1).push(Query);
+			output(0).push(Query);
 		}else{
 			//Packet is not a leave update report packet, so no action should be taken
 			return;
@@ -87,6 +88,45 @@ void QueryGenerator::push(int, Packet* p){
 	}
 }
 
+void QueryGenerator::run_timer(Timer* timer){
+	//Create packet
+	int tailroom = 0;
+	int headroom = sizeof(click_ip)+sizeof(click_ether);
+	int packetsize = sizeof(MulticastQuery);
+	WritablePacket* Query = Packet::make(headroom, 0, packetsize, tailroom);
+	if(Query == 0){
+	  click_chatter("cannot make packet!");
+	  return;
+	}
+
+
+	memset(Query->data(), 0, Query->length());
+
+	//Generate the Supress and QRV parameters
+	bool Suppress = 0;
+	int QRV = 2; //Should always be smaller than 8
+
+	//Shift suppress 3 bits to the left
+	uint8_t resvsqvr = ((int)Suppress << 3) + QRV;
+
+	MulticastQuery* format = (MulticastQuery*)Query->data();
+	//Fill Querypacket with correct information
+	format->Type = 0x11;
+	format->MRC = 0;
+	format->Checksum = 0;
+	format->GroupAddress = IPAddress("0.0.0.0");
+	format->ResvSQvr = resvsqvr;
+	format->QQIC = 0;
+	format->NumSources = htons(1);
+	format->Source = 0;
+
+	format->Checksum = click_in_cksum((unsigned char *)format, sizeof(MulticastQuery));
+
+	//Push query to global query output
+	output(1).push(Query);
+
+	timer->schedule_after_msec(1000);
+}
 
 CLICK_ENDDECLS
 EXPORT_ELEMENT(QueryGenerator)

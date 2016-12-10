@@ -106,10 +106,11 @@ elementclass Router {
 		-> IGMPStateupdate(INFOBASE infoBase)
 		-> query :: QueryGenerator
 		-> IPEncap(2, $client1_address, multicast_report_address, TTL 1)
+		-> CorrectQueryDest
 		-> forwarder
 
 	query[1]
-		-> IPEncap(2, 224.0.0.22, 224.0.0.1, TTL 1)
+		-> IPEncap(2, multicast_report_address, 224.0.0.1, TTL 1)
 		-> forwarder
 	// Local delivery
 	rt[0]
