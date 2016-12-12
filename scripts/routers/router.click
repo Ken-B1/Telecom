@@ -17,7 +17,7 @@ elementclass Router {
 	$server_address, $client1_address, $client2_address |
 
 	//Infobase element for the multicast states
-	infoBase :: IGMPRouterState(FIRSTNETWORK $client1_address, SECONDNETWORK $client2_address);
+	infoBase :: IGMPRouterState(FIRSTNETWORK $client1_address, SECONDNETWORK $client2_address, SOURCEADDRESS multicast_server_address);
 
 	// Shared IP input path and routing table
 	ip :: Strip(14)

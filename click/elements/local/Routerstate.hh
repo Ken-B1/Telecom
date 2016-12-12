@@ -2,10 +2,38 @@
 #define CLICK_IGMPROUTERSTATE_HH
 #include <click/element.hh>
 #include <click/hashtable.hh>
+#include <click/timer.hh>
 #include <iostream>
 
 CLICK_DECLS
+/*Struct that contains a sourceaddress with a sourcetimer
+  For our implementation this is quite useless (since there is only one source), 
+  but we still implement it to adhere closely to the rfc
+  The struct contains the sourceaddress and the sourcetimer
+  This sourceaddress will always be the sourceaddress of the singular server
+*/
 
+struct sourceList{
+	IPAddress sourceaddress;
+	//Timer sourcetimer;
+};
+
+/*Struct that contains a router state-per-group
+  This struct will be used to maintain the state-per-group-per-attachet-network
+  It contains:
+    multicastAddress -> group address
+    groupTimer -> grouptimer
+    filtermode -> the filtermode. It works as follows:
+      True = include
+      False = exclude
+    sourcelist -> The sourcelist (or in our case sourceelement) that represents the requested sources
+*/
+struct StatePerGroup{
+	IPAddress multicastAddress;
+	Timer* groupTimer;
+	bool filtermode;
+	sourceList sourcerecord;
+};
 
 /*HashMap containing an entry for each attached network
   Each network has a Hashmap of states attached to it, one state for each group the network is interested in
@@ -16,7 +44,8 @@ CLICK_DECLS
   These vectors will be expanded later to add timers
 */
 
-typedef HashTable<IPAddress, HashTable<IPAddress, bool> > States;
+typedef Vector<StatePerGroup*> groupstate;
+typedef HashTable<IPAddress, groupstate> States;
 
 class IGMPRouterState : public Element { 
 	public:
@@ -25,7 +54,6 @@ class IGMPRouterState : public Element {
 		
 		const char *class_name() const	{ return "IGMPRouterState"; }
 		const char *port_count() const	{ return "0/0"; }
-		const char *processing() const	{ return PUSH; }
 		int configure(Vector<String>&, ErrorHandler*);
 
 		/*Include and exclude records
@@ -46,6 +74,12 @@ class IGMPRouterState : public Element {
 		States getStates();
 		Vector<IPAddress> getGroups();
 		Vector<IPAddress> getNetworks();
+
+		//Method to request filtermode for network x and group y
+		bool getfiltermode(IPAddress, IPAddress);
+
+		//Methods for timing
+		static void HandleGroupExpire(Timer*, void*);
 		
 	private:
 		States states;
@@ -53,9 +87,18 @@ class IGMPRouterState : public Element {
 		Vector<IPAddress> networks;
 		//group holds all existing groups for easy textual representation
 		Vector<IPAddress> groups;
+		//Sourceaddress of our server
+		IPAddress srcaddress;
 
 		//Check if the group already exists
 		bool hasGroup(IPAddress);
+
+		//TimerGroupData
+		struct timergroupdata{
+			IPAddress network;
+			StatePerGroup* spg;
+			IGMPRouterState* igmprs; 
+		};
 };
 
 CLICK_ENDDECLS

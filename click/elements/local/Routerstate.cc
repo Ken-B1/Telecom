@@ -21,7 +21,7 @@ IGMPRouterState::~ IGMPRouterState()
 int IGMPRouterState::configure(Vector<String> &conf, ErrorHandler *errh) {
 	IPAddress firstnetwork;
 	IPAddress secondnetwork;
-	if (cp_va_kparse(conf, this,errh, "FIRSTNETWORK", cpkM, cpIPAddress, &firstnetwork, "SECONDNETWORK", cpkM, cpIPAddress, &secondnetwork,cpEnd) < 0) return -1;
+	if (cp_va_kparse(conf, this,errh, "FIRSTNETWORK", cpkM, cpIPAddress, &firstnetwork, "SECONDNETWORK", cpkM, cpIPAddress, &secondnetwork, "SOURCEADDRESS", cpkM, cpIPAddress, &srcaddress, cpEnd) < 0) return -1;
 	this->networks.push_back(firstnetwork);
 	this->networks.push_back(secondnetwork);
 	return 0;
@@ -29,7 +29,7 @@ int IGMPRouterState::configure(Vector<String> &conf, ErrorHandler *errh) {
 
 
 void IGMPRouterState::includeRecord(IPAddress network, IPAddress group){
-	this->states[network][group] = true;
+	//Check if the group already exists to update the ease of use vector
 	bool checkifnotexists = true;
 	for(Vector<IPAddress>::iterator it = this->groups.begin(); it != this->groups.end(); ++it){
 		if(*it == group){
@@ -37,14 +37,63 @@ void IGMPRouterState::includeRecord(IPAddress network, IPAddress group){
 		}
 	}	
 	if(checkifnotexists){
+		//Group doesnt exist yet, so add it
 		this->groups.push_back(group);
+		//Create the sourcerecord for this entry
+		sourceList sourcerecord;
+		sourcerecord.sourceaddress = this->srcaddress;
+		
+		for(Vector<IPAddress>::iterator it = this->networks.begin(); it != this->networks.end(); ++it){
+			StatePerGroup* newgroupstate = new StatePerGroup;
+			newgroupstate->multicastAddress = group;
+			newgroupstate->sourcerecord = sourcerecord;
+			timergroupdata* tgd = new timergroupdata;
+			tgd->spg = newgroupstate;
+			tgd->igmprs = this;
+			tgd->network = *it;
+			newgroupstate->groupTimer = new Timer(&IGMPRouterState::HandleGroupExpire, tgd);
+			newgroupstate->groupTimer->initialize(this);
+			newgroupstate->groupTimer->schedule_after_sec(10);
+			if(*it == network){
+				newgroupstate->filtermode = true;
+			}else{
+				newgroupstate->filtermode = false;
+			}
+			this->states[*it].push_back(newgroupstate);
+		}
+	}else{
+		//Group exists so update it
+		groupstate statelist = this->states[network];
+		for(groupstate::iterator it = statelist.begin(); it != statelist.end(); ++it){
+			if((*it)->multicastAddress == group){
+				(*it)->filtermode = true;
+			}
+		}
+		this->states[network] = statelist;
 	}
 }
 
 void IGMPRouterState::excludeRecord(IPAddress network, IPAddress group){
-	/*Set entry for this combination to false
-	*/
-	this->states[network][group] = false;
+	bool checkifnotexists = true;
+	for(Vector<IPAddress>::iterator it = this->groups.begin(); it != this->groups.end(); ++it){
+		if(*it == group){
+			checkifnotexists = false;
+		}
+	}	
+
+	if(checkifnotexists){
+		//Do nothing since setting a group to exclude if it doesnt exist is the same as doing nothing
+	}else{
+		/*Set entry for this combination to false
+		*/
+		groupstate statelist = this->states[network];
+		for(groupstate::iterator it = statelist.begin(); it != statelist.end(); ++it){
+			if((*it)->multicastAddress == group){
+				(*it)->filtermode = false;
+			}
+		}
+		this->states[network] = statelist;
+	}
 }
 
 String IGMPRouterState::getTextualRepresentation(){
@@ -54,12 +103,23 @@ String IGMPRouterState::getTextualRepresentation(){
 		if(this->groups.size() == 0){
 			returnvalue += "\t" + String("No groups are active") + "\n";
 		}else{
-			for(Vector<IPAddress>::iterator groupit = this->groups.begin(); groupit != this->groups.end(); ++groupit){
-				returnvalue += "\tGroup " + groupit->unparse() + ": " + String(this->states[*it][*groupit]) + "\n";
+			groupstate statelist = this->states[*it];
+			for(groupstate::iterator groupit = statelist.begin(); groupit != statelist.end(); ++groupit){
+				returnvalue += "\tGroup " + (*groupit)->multicastAddress.unparse() + ": " + String((*groupit)->filtermode) + "\n";
 			}
 		}
 	}
 	return returnvalue;
+}
+
+bool IGMPRouterState::getfiltermode(IPAddress network, IPAddress group){
+	groupstate statelist = this->states[network];
+	for(groupstate::iterator it = statelist.begin(); it != statelist.end(); ++it){
+		if((*it)->multicastAddress == group){
+			return (*it)->filtermode;
+		}
+	}
+	return false;
 }
 
 Vector<IPAddress> IGMPRouterState::getNetworks(){
@@ -73,6 +133,13 @@ Vector<IPAddress> IGMPRouterState::getGroups(){
 States IGMPRouterState::getStates(){
 	return this->states;
 }
+
+void IGMPRouterState::HandleGroupExpire(Timer* timer, void* timerdata){
+	timergroupdata* data = (timergroupdata*)timerdata;
+	IGMPRouterState* routerstate = data->igmprs;
+	routerstate->excludeRecord(data->network, data->spg->multicastAddress);
+}
+
 
 //Below are the handlers for IGMPRouterState
 String IGMPRouterState::read(Element* e, void * thunk){

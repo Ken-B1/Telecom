@@ -40,7 +40,7 @@ void PacketForward::push(int s, Packet* p){
 	States receivedStates = this->infoBase->getStates();
 	int i=0;
 	for(Vector<IPAddress>::iterator network = receivedNetworks.begin(); network != receivedNetworks.end(); ++network){		        
-		if(receivedStates[*network][iph->ip_dst]){
+		if(this->infoBase->getfiltermode(*network, iph->ip_dst)){
 			output(i).push(p->clone());
 		}
 		i++;
