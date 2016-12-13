@@ -44,15 +44,15 @@ void IGMPStateupdate::push(int s, Packet* p){
 
 		switch(recordtype){
 			case 2: //Received an exclude (join) querry responce
-				this->infoBase->includeRecord(source, group);
+				this->infoBase->excludeRecord(source, group);
 				break;
 			case 3: //Received a include record == leave
 				//Change names to correctly represent the include/exclude
-				this->infoBase->excludeRecord(source, group);
+				this->infoBase->includeRecord(source, group);
 				output(0).push(p);
 				break;
 			case 4: //Received a exclude record == join
-				this->infoBase->includeRecord(source, group);
+				this->infoBase->excludeRecord(source, group);
 				break;
 
 		}

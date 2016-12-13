@@ -32,7 +32,7 @@ struct StatePerGroup{
 	IPAddress multicastAddress;
 	Timer* groupTimer;
 	bool filtermode;
-	sourceList sourcerecord;
+	//sourceList sourcerecord;
 };
 
 /*HashMap containing an entry for each attached network
@@ -58,10 +58,13 @@ class IGMPRouterState : public Element {
 
 		/*Include and exclude records
 		  Takes two ipaddresses, the network to update and the groupadress
+		  The groupExpired method will be used to actually set a group filtermode to include
+		  This happens after a timer runs out
+		  The includeRecord will not set a group to include, but will execute the correct actions according to the rfc
 		*/		
 		void includeRecord(IPAddress, IPAddress);
 		void excludeRecord(IPAddress, IPAddress);
-
+		void groupExpired(IPAddress, IPAddress);
 
 		/*
 		  Handlers for this element
@@ -82,6 +85,13 @@ class IGMPRouterState : public Element {
 		static void HandleGroupExpire(Timer*, void*);
 		
 	private:
+		//Group Membership Interval = Robustnessvariable * Queryinterval + Query response interval
+		//Different settings used in querries and other igmp functions
+		int RobustnessVariable; //Default 2
+		int QueryInterval; //Default 125 seconds
+		int QueryResponseInterval; //Default 100 (10 seconds)
+		double LMQI; //Default 10 (1 second)
+		double LMQC; //Default RobustnessVariable
 		States states;
 		//networks holds all attached networks to simplify lookup and textual printing
 		Vector<IPAddress> networks;

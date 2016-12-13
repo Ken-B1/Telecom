@@ -13,7 +13,13 @@ CLICK_DECLS
 
 
 IGMPRouterState::IGMPRouterState()
-{}
+{
+	this->RobustnessVariable = 2; //Default 2
+	this->QueryInterval = 125; //Default 125 seconds
+	this->QueryResponseInterval = 100; //Default 100 (10 seconds)
+	this->LMQI = 10;
+	this->LMQC = this->RobustnessVariable;
+}
 
 IGMPRouterState::~ IGMPRouterState()
 {}
@@ -28,7 +34,8 @@ int IGMPRouterState::configure(Vector<String> &conf, ErrorHandler *errh) {
 }
 
 
-void IGMPRouterState::includeRecord(IPAddress network, IPAddress group){
+void IGMPRouterState::excludeRecord(IPAddress network, IPAddress group){
+	click_chatter("Received excluderecord");
 	//Check if the group already exists to update the ease of use vector
 	bool checkifnotexists = true;
 	for(Vector<IPAddress>::iterator it = this->groups.begin(); it != this->groups.end(); ++it){
@@ -36,24 +43,25 @@ void IGMPRouterState::includeRecord(IPAddress network, IPAddress group){
 			checkifnotexists = false;
 		}
 	}	
+
 	if(checkifnotexists){
 		//Group doesnt exist yet, so add it
 		this->groups.push_back(group);
-		//Create the sourcerecord for this entry
-		sourceList sourcerecord;
-		sourcerecord.sourceaddress = this->srcaddress;
 		
 		for(Vector<IPAddress>::iterator it = this->networks.begin(); it != this->networks.end(); ++it){
 			StatePerGroup* newgroupstate = new StatePerGroup;
 			newgroupstate->multicastAddress = group;
-			newgroupstate->sourcerecord = sourcerecord;
 			timergroupdata* tgd = new timergroupdata;
 			tgd->spg = newgroupstate;
 			tgd->igmprs = this;
 			tgd->network = *it;
 			newgroupstate->groupTimer = new Timer(&IGMPRouterState::HandleGroupExpire, tgd);
 			newgroupstate->groupTimer->initialize(this);
-			newgroupstate->groupTimer->schedule_after_sec(10);
+
+			//Schedule timer after Group membership interval seconds
+			int GroupMembershipInterval = (this->RobustnessVariable*this->QueryInterval) + this->QueryResponseInterval/10;
+			newgroupstate->groupTimer->schedule_after_sec(GroupMembershipInterval);
+			click_chatter(String("Setting group timer to GMI: " + String(GroupMembershipInterval)).c_str());
 			if(*it == network){
 				newgroupstate->filtermode = true;
 			}else{
@@ -61,19 +69,26 @@ void IGMPRouterState::includeRecord(IPAddress network, IPAddress group){
 			}
 			this->states[*it].push_back(newgroupstate);
 		}
+
 	}else{
 		//Group exists so update it
 		groupstate statelist = this->states[network];
 		for(groupstate::iterator it = statelist.begin(); it != statelist.end(); ++it){
 			if((*it)->multicastAddress == group){
 				(*it)->filtermode = true;
+				//Update timer to GMI
+				int GroupMembershipInterval = (this->RobustnessVariable*this->QueryInterval) + this->QueryResponseInterval/10;
+				click_chatter(String("Setting group timer to GMI: " + String(GroupMembershipInterval)).c_str());
+				(*it)->groupTimer->clear();
+				(*it)->groupTimer->schedule_after_sec(GroupMembershipInterval);
 			}
 		}
 		this->states[network] = statelist;
 	}
 }
 
-void IGMPRouterState::excludeRecord(IPAddress network, IPAddress group){
+void IGMPRouterState::includeRecord(IPAddress network, IPAddress group){
+	//Leaverecord for group is received, so router will querry for other clients possibly in group
 	bool checkifnotexists = true;
 	for(Vector<IPAddress>::iterator it = this->groups.begin(); it != this->groups.end(); ++it){
 		if(*it == group){
@@ -83,18 +98,34 @@ void IGMPRouterState::excludeRecord(IPAddress network, IPAddress group){
 
 	if(checkifnotexists){
 		//Do nothing since setting a group to exclude if it doesnt exist is the same as doing nothing
+		return;
 	}else{
-		/*Set entry for this combination to false
+		/*Send a group querry and update the timers
+		  The group timer for this group becomes LMQT = Total time spent after LAST MEMBER QUERY COUNT retransmissions
+		  = Last member query interval * last member query count
 		*/
-		groupstate statelist = this->states[network];
-		for(groupstate::iterator it = statelist.begin(); it != statelist.end(); ++it){
+		groupstate Groups = this->states[network];
+		for(groupstate::iterator it = Groups.begin(); it != Groups.end(); ++it){
 			if((*it)->multicastAddress == group){
-				(*it)->filtermode = false;
+				double LMQT = this->LMQC * (this->LMQI/10);
+				click_chatter(String("Setting group timer to LMQT: " + String(LMQT)).c_str());
+				(*it)->groupTimer->clear();
+				(*it)->groupTimer->schedule_after_sec(LMQT);
 			}
 		}
-		this->states[network] = statelist;
 	}
 }
+
+
+void IGMPRouterState::groupExpired(IPAddress network, IPAddress group){
+	groupstate Groups = this->states[network];
+	for(groupstate::iterator it = Groups.begin(); it != Groups.end(); ++it){
+		if((*it)->multicastAddress == group){
+			(*it)->filtermode = false;
+		}
+	}
+}
+
 
 String IGMPRouterState::getTextualRepresentation(){
 	String returnvalue = "";	
@@ -135,9 +166,10 @@ States IGMPRouterState::getStates(){
 }
 
 void IGMPRouterState::HandleGroupExpire(Timer* timer, void* timerdata){
+	click_chatter("Group has expired");
 	timergroupdata* data = (timergroupdata*)timerdata;
 	IGMPRouterState* routerstate = data->igmprs;
-	routerstate->excludeRecord(data->network, data->spg->multicastAddress);
+	routerstate->groupExpired(data->network, data->spg->multicastAddress);
 }
 
 

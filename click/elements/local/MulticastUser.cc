@@ -124,7 +124,6 @@ void multicastuser::HandleExpire(Timer* timer, void* timerdata){
 	TimerData* data = (TimerData*)timerdata;
 	multicastuser* mu = data->me;
 	if(data->counter < mu->getQRV()){
-		click_chatter("test");
 		data->counter += 1;
 		timer->assign(*multicastuser::HandleExpire, data);
 		timer->schedule_after_msec(1000);
