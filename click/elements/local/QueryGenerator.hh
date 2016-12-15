@@ -2,6 +2,7 @@
 #define CLICK_QUERYGENERATOR_HH
 #include <click/element.hh>
 #include "PacketDefinitions.hh"
+#include "Routerstate.hh"
 #include <click/timer.hh>
 
 CLICK_DECLS
@@ -17,8 +18,11 @@ class QueryGenerator : public Element {
 		
 		void push(int, Packet*);
 		void run_timer(Timer*);
+		void send(Packet*);
+		static void handleExpiry(Timer*,void*);
 	private:
 		uint32_t maxSize;
+		IGMPRouterState* infoBase;
 		//Timer for general querries
 		Timer timer;
 };

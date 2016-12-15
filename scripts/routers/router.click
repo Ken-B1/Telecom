@@ -103,9 +103,11 @@ elementclass Router {
 	//Multicast report messages 
 	//The query generator pushed groupbased querries to output 0 and global querries to output 1
 	rt[4]
+		-> IGMPMessageChecksum
 		-> IGMPStateupdate(INFOBASE infoBase)
-		-> query :: QueryGenerator
-		-> IPEncap(2, $client1_address, multicast_report_address, TTL 1)
+		-> query :: QueryGenerator(INFOBASE infoBase)
+		-> retransmitter :: QueryRetransmitter(INFOBASE infoBase)
+		-> IPEncap(2, multicast_report_address, multicast_report_address, TTL 1)
 		-> CorrectQueryDest
 		-> forwarder
 

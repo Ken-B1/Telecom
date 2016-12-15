@@ -21,7 +21,6 @@ CorrectQueryDest::~ CorrectQueryDest()
 
 int CorrectQueryDest::configure(Vector<String> &conf, ErrorHandler *errh) {
 	if (cp_va_kparse(conf, this,errh, cpEnd) < 0) return -1;
-	
 	return 0;
 }
 

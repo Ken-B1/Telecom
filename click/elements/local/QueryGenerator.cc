@@ -18,7 +18,7 @@ QueryGenerator::~ QueryGenerator()
 {}
 
 int QueryGenerator::configure(Vector<String> &conf, ErrorHandler *errh) {
-	if (cp_va_kparse(conf, this,errh,cpEnd) < 0) return -1;
+	if (cp_va_kparse(conf, this,errh,"INFOBASE", cpkM, cpElement, &infoBase,cpEnd) < 0) return -1;
 	timer.initialize(this);
 	timer.schedule_after_sec(120);
 	return 0;
@@ -42,8 +42,14 @@ void QueryGenerator::push(int, Packet* p){
 		IPAddress group = record.MulticastAddress;
 
 		//Generate the Supress and QRV parameters
-		bool Suppress = 0;
-		int QRV = 2; //Should always be smaller than 8
+		IPAddress source(ipHdr->ip_src);
+		//Bitwise or to set last octet to 254
+		source |= IPAddress("0.0.0.254");
+		//Bitwise and to make sure last bit is 0
+		source &= IPAddress("255.255.255.254");
+
+		bool Suppress = false;
+		int QRV = this->infoBase->getQRV(); //Should always be smaller than 8
 
 		//Shift suppress 3 bits to the left
 		uint8_t resvsqvr = ((int)Suppress << 3) + QRV;
@@ -65,15 +71,15 @@ void QueryGenerator::push(int, Packet* p){
 
 
 			memset(Query->data(), 0, Query->length());
-
+			double MRI = this->infoBase->getQRI(); 
 			MulticastQuery* format = (MulticastQuery*)Query->data();
 			//Fill Querypacket with correct information
 			format->Type = 0x11;
-			format->MRC = 0;
+			format->MRC = this->infoBase->getLastMemberQueryInterval();
 			format->Checksum = 0;
 			format->GroupAddress = group;
 			format->ResvSQvr = resvsqvr;
-			format->QQIC = 0;
+			format->QQIC = MRI;
 			format->NumSources = htons(1);
 			format->Source = record.source;
 
@@ -87,6 +93,8 @@ void QueryGenerator::push(int, Packet* p){
 		}
 	}
 }
+
+
 
 void QueryGenerator::run_timer(Timer* timer){
 	//Create packet
@@ -109,14 +117,17 @@ void QueryGenerator::run_timer(Timer* timer){
 	//Shift suppress 3 bits to the left
 	uint8_t resvsqvr = ((int)Suppress << 3) + QRV;
 
+	//Get the Max resp code
+	double MRI = this->infoBase->getQRI();	//Is always 125 since we wont be tuning values
+
 	MulticastQuery* format = (MulticastQuery*)Query->data();
 	//Fill Querypacket with correct information
 	format->Type = 0x11;
-	format->MRC = 0;
+	format->MRC = MRI;
 	format->Checksum = 0;
 	format->GroupAddress = IPAddress("0.0.0.0");
 	format->ResvSQvr = resvsqvr;
-	format->QQIC = 0;
+	format->QQIC = MRI;
 	format->NumSources = htons(1);
 	format->Source = 0;
 
@@ -125,7 +136,7 @@ void QueryGenerator::run_timer(Timer* timer){
 	//Push query to global query output
 	output(1).push(Query);
 
-	timer->schedule_after_sec(120);
+	timer->schedule_after_sec(MRI);
 }
 
 CLICK_ENDDECLS

@@ -33,6 +33,7 @@ class UserinfoBase : public Element {
 		//Getters
 		Groups getstates();
 		int getQRV();
+		double getURI();
 
 		
 		/*
@@ -47,8 +48,9 @@ class UserinfoBase : public Element {
 		
 	private:
 		Groups states;
-		//The current robustness variable value for this client
+		//The variables for this client
 		int QRV;
+		double URI;
 };
 
 CLICK_ENDDECLS

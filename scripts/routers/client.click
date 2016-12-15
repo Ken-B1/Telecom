@@ -29,6 +29,7 @@ elementclass Client {
 	//Sends a queryresponse only if this user is still part of the querried group
 	
 	IGMPcheck[1]
+		-> IGMPQueryChecksum
 		// Queryresponder will respond to a global querry, specific querries are for later
 		-> QueryResponder(INFOBASE infoBase)
 		-> IPEncap(2, $address, multicast_report_address, TTL 1)

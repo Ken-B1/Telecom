@@ -16,14 +16,11 @@ class multicastuser : public Element {
 		const char *processing() const	{ return PUSH; }
 		int configure(Vector<String>&, ErrorHandler*);
 		
-		void push(int, Packet *);
+		void push(Packet *);
 		static int join(const String &conf, Element *e, void * thunk, ErrorHandler * errh);
 		static int leave(const String &conf, Element *e, void * thunk, ErrorHandler * errh);
 		void add_handlers();
 
-		//Methods for timing
-		static void HandleExpire(Timer*, void*);
-		void send(Packet*);
 		int getQRV();
 	private:
 		//Method that generates a packet without any records in it
@@ -36,15 +33,6 @@ class multicastuser : public Element {
 		//QRV variable
 		int QRV;
 
-		//Timer for interval between resends
-		Timer timer;
-
-		//Struct with counter and packet
-		struct TimerData{
-			multicastuser* me;
-			Packet* p;
-			int counter;
-		};
 };
 
 CLICK_ENDDECLS

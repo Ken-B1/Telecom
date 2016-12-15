@@ -66,6 +66,12 @@ class IGMPRouterState : public Element {
 		void excludeRecord(IPAddress, IPAddress);
 		void groupExpired(IPAddress, IPAddress);
 
+		//Getters for the variables
+		double getLastMemberQueryCount();
+		double getLastMemberQueryInterval();
+		int getQRV();
+		int getQRI();
+
 		/*
 		  Handlers for this element
 		    Read: gives a textual representation of the current states

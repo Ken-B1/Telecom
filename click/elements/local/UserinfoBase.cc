@@ -15,6 +15,7 @@ CLICK_DECLS
 UserinfoBase::UserinfoBase()
 {
 	this->QRV = 2;
+	this->URI = 1;
 }
 
 UserinfoBase::~ UserinfoBase()
@@ -49,6 +50,10 @@ Groups UserinfoBase::getstates(){
 
 int UserinfoBase::getQRV(){
 	return this->QRV;
+}
+
+double UserinfoBase::getURI(){
+	return this->URI;
 }
 
 String UserinfoBase::getTextualRepresentation(){

@@ -172,6 +172,22 @@ void IGMPRouterState::HandleGroupExpire(Timer* timer, void* timerdata){
 	routerstate->groupExpired(data->network, data->spg->multicastAddress);
 }
 
+/*
+	Getters and Setters
+*/
+
+double IGMPRouterState::getLastMemberQueryCount(){
+	return this->LMQC;
+};
+double IGMPRouterState::getLastMemberQueryInterval(){
+	return this->LMQI;
+};
+int IGMPRouterState::getQRV(){
+	return this->QueryInterval;
+};
+int IGMPRouterState::getQRI(){
+	return this->QueryResponseInterval;
+};
 
 //Below are the handlers for IGMPRouterState
 String IGMPRouterState::read(Element* e, void * thunk){

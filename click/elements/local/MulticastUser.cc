@@ -24,19 +24,8 @@ int multicastuser::configure(Vector<String> &conf, ErrorHandler *errh) {
 	return 0;
 }
 
-void multicastuser::push(int, Packet* p){
+void multicastuser::push(Packet* p){
 	output(0).push(p);
-}
-
-void multicastuser::send(Packet* p){
-	TimerData* timerdata = new TimerData();
-	timerdata->me = this;
-	timerdata->p = p->clone();
-	timerdata->counter = 0;
-	
-	Timer* t = new Timer(&multicastuser::HandleExpire, timerdata);
-	t->initialize(this);
-	t->schedule_after_msec(1000);
 }
 
 int multicastuser::join(const String& conf, Element* e, void * thunk, ErrorHandler * errh){
@@ -62,7 +51,7 @@ int multicastuser::join(const String& conf, Element* e, void * thunk, ErrorHandl
 	//Calculate checksum 
 	format->Checksum = click_in_cksum((unsigned char *)format, sizeof(MulticastMessage));
 	
-        me->send(p);	
+        me->push(p);	
 	return 0; 
 }
 
@@ -87,7 +76,7 @@ int multicastuser::leave(const String& conf, Element* e, void * thunk, ErrorHand
 
 	format->Checksum = click_in_cksum((unsigned char *)format, sizeof(MulticastMessage));
 
-        me->send(p);	
+        me->push(p);
 	return 0; 
 }
 
@@ -118,17 +107,6 @@ WritablePacket* multicastuser::generatePacket(){
 	format->NumRecords = htons(numrecords);
 
 	return p;
-}
-
-void multicastuser::HandleExpire(Timer* timer, void* timerdata){
-	TimerData* data = (TimerData*)timerdata;
-	multicastuser* mu = data->me;
-	if(data->counter < mu->getQRV()){
-		data->counter += 1;
-		timer->assign(*multicastuser::HandleExpire, data);
-		timer->schedule_after_msec(1000);
-		mu->push(0, data->p->clone());
-	}
 }
 
 int multicastuser::getQRV(){
