@@ -449,7 +449,7 @@ Copyright (C) 2010 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/ken/Desktop/click-2.0.1'
+ac_pwd='/home/jordan/Telecom/Telecom-master/click-2.0.1'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 AWK='mawk'
