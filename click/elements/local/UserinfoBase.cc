@@ -49,6 +49,7 @@ Groups UserinfoBase::getstates(){
 }
 
 int UserinfoBase::getQRV(){
+	click_chatter(String("Called for qrv: " + String(this->QRV)).c_str());
 	return this->QRV;
 }
 

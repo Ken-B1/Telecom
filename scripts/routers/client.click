@@ -12,6 +12,7 @@ elementclass Client {
 
         //Element that will instantiate a join or leave in the multicast network
 	user :: RecordGenerator(INFOBASE infoBase)
+		-> retransmitter :: UserRetransmitter(INFOBASE infoBase)
 		-> IPEncap(2, $address, multicast_report_address, TTL 1)
 		-> EtherEncap(0x0800, $address, $gateway)
 		-> output;
