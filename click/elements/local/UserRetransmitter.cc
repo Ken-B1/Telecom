@@ -36,10 +36,14 @@ void UserRetransmitter::run_timer(Timer* t){
 	click_chatter("Retransmitting a user datagram");
 	output(0).push(this->packet->clone());
 	if(this->counter > 0){
+		srand (time(NULL));
 		click_chatter(String(this->counter).c_str());
 		counter--;
-		//double interval = this->infoBase->getLastMemberQueryInterval()/10;
-		timer.schedule_after_sec(1);
+		double interval = this->infoBase->getURI();
+		click_chatter(String(interval).c_str());
+		int rate = (rand() % (int)(interval*1000));	//Calculate random value between 0 and interval
+		click_chatter(String(rate).c_str());
+		timer.schedule_after_msec(rate);
 	}
 }
 

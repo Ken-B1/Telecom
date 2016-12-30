@@ -1,6 +1,8 @@
 #ifndef CLICK_USERRETRANSMITTER_HH
 #define CLICK_USERRETRANSMITTER_HH
 #include <click/element.hh>
+#include <stdlib.h>
+#include <time.h>
 #include "PacketDefinitions.hh"
 #include "UserinfoBase.hh"
 #include <click/timer.hh>

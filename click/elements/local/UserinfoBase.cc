@@ -28,12 +28,14 @@ int UserinfoBase::configure(Vector<String> &conf, ErrorHandler *errh) {
 
 
 void UserinfoBase::includeGroup(IPAddress group){
+	//= exclude an empty source list, aka join a group and receive all sources
 	if(!this->hasGroup(group)){
 		this->states.push_back(group);
 	}
 }
 
 void UserinfoBase::excludeGroup(IPAddress group){
+	//= include an empty source list, aka leave a group
 	if(this->hasGroup(group)){
 		for(Groups::iterator it = this->states.begin(); it != this->states.end(); ++it){
 			if(group == *it){
